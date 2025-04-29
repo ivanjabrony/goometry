@@ -1,14 +1,27 @@
 package matrixes
 
 import (
+	"fmt"
 	"math"
+	"strconv"
 
 	"github.com/fogleman/gg"
 )
 
-//TODO: сделать функцию которая выдает контекст нормальный
+func DrawTextAtPoint(dc *gg.Context, text string, x, y float64) {
+	dc.Push()
+	dc.Scale(-1, 1)
+	dc.Rotate(-math.Pi)
+	dc.DrawString(text, x, -y)
+	dc.Stroke()
+	dc.Pop()
+}
 
-func NewDrawingContext(width, height int) *gg.Context {
+func WritePointCoordinates(dc *gg.Context, x, y float64) {
+	DrawTextAtPoint(dc, fmt.Sprintf("(%v, %v)", x, y), x, y)
+}
+
+func NewDrawingContext(width, height int, hasNumbers bool) *gg.Context {
 	dc := gg.NewContext(width, height)
 	centerX, centerY := 0, 0
 
@@ -29,6 +42,9 @@ func NewDrawingContext(width, height int) *gg.Context {
 
 	for i := 0; i <= height/25; i++ {
 		if i == 0 {
+			if hasNumbers {
+				DrawTextAtPoint(dc, "0", 1, 0)
+			}
 			continue // Пропускаем центр
 		}
 
@@ -40,6 +56,13 @@ func NewDrawingContext(width, height int) *gg.Context {
 		dc.DrawLine(-x, float64(centerY-5), -x, float64(centerY+5))
 		dc.Stroke()
 
+		if hasNumbers {
+			text := strconv.Itoa(int(x))
+			DrawTextAtPoint(dc, text, x, 0)
+			text = strconv.Itoa(int(-x))
+			DrawTextAtPoint(dc, text, -x, 0)
+		}
+
 		// Метки по оси Y
 		y := float64(centerY + i*25)
 		dc.DrawLine(float64(centerX-5), y, float64(centerX+5), y)
@@ -47,6 +70,13 @@ func NewDrawingContext(width, height int) *gg.Context {
 
 		dc.DrawLine(float64(centerX-5), -y, float64(centerX+5), -y)
 		dc.Stroke()
+
+		if hasNumbers {
+			text := strconv.Itoa(int(y))
+			DrawTextAtPoint(dc, text, 1, y)
+			text = strconv.Itoa(int(-y))
+			DrawTextAtPoint(dc, text, 1, -y)
+		}
 	}
 
 	return dc
@@ -54,12 +84,6 @@ func NewDrawingContext(width, height int) *gg.Context {
 
 func DrawPolygon(ctx *gg.Context, points []Matrix) {
 	ctx.Push()
-	for _, v := range points {
-		x := v.Data[0][0]
-		y := v.Data[1][0]
-		ctx.DrawPoint(x, y, 5)
-		ctx.Stroke()
-	}
 	for i := range points[:len(points)-1] {
 		x1 := points[i].Data[0][0]
 		y1 := points[i].Data[1][0]
@@ -133,6 +157,9 @@ func DrawLineStupid(ctx *gg.Context, xa, ya, xb, yb int, isInverted bool) {
 	b := float64(ya) - k*float64(xa)
 	ctx.Push()
 
+	if xa > xb {
+		xa, xb = xb, xa
+	}
 	for xi := xa; xi < xb; xi++ {
 		yi := int(k*float64(xi) + b)
 		if isInverted {

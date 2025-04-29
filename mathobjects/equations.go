@@ -33,6 +33,12 @@ func GetHyperbolic(a, b, t float64) (float64, float64) {
 	return x, y
 }
 
+func GetHyperbolicFunctions(a, b float64) (func(float64) float64, func(float64) float64) {
+	f1 := func(t float64) float64 { return a * math.Cosh(t) }
+	f2 := func(t float64) float64 { return b * math.Sinh(t) }
+	return f1, f2
+}
+
 func GetSpiralArchimedFunctions(v, c, w float64) (func(float64) float64, func(float64) float64) {
 	f1 := func(t float64) float64 { return (v*t + c) * math.Cos(w*t) }
 	f2 := func(t float64) float64 { return (v*t + c) * math.Sin(w*t) }
@@ -56,14 +62,12 @@ func deriviate(f func(float64) float64, x, h float64) float64 {
 	return (f(x+h) - f(x-h)) / (2 * h)
 }
 
-// Численное вычисление второй производной
 func secondDerivative(f func(float64) float64, t, h float64) float64 {
 	return (f(t+h) - 2*f(t) + f(t-h)) / (h * h)
 }
 
-// Функция вычисления кривизны
 func GetCurvature(xFunc, yFunc func(float64) float64, t float64) float64 {
-	h := 1e-5 // Маленький шаг для численного дифференцирования
+	h := 1e-5
 
 	// Производные
 	x1 := deriviate(xFunc, t, h)
@@ -76,7 +80,7 @@ func GetCurvature(xFunc, yFunc func(float64) float64, t float64) float64 {
 	denominator := math.Pow(x1*x1+y1*y1, 1.5)
 
 	if denominator == 0 {
-		return 0 // Кривизна не определена (обычно это прямая)
+		return 0
 	}
 
 	return numerator / denominator
@@ -88,10 +92,10 @@ func GetTangetVectorParam(f1, f2 func(float64) float64, t float64) (float64, flo
 	return tx, ty
 }
 
-func GetNormalVectorParam(xFunc, yFunc func(float64) float64, t float64) (float64, float64) {
+func GetNormalVectorParam(f1, f2 func(float64) float64, t float64) (float64, float64) {
 	h := 1e-5
-	x1 := deriviate(xFunc, t, h)
-	y1 := deriviate(yFunc, t, h)
+	x1 := deriviate(f1, t, h)
+	y1 := deriviate(f2, t, h)
 	return -y1, x1
 }
 
@@ -139,7 +143,6 @@ func GetEvolute(xFunc, yFunc func(float64) float64, t float64) (float64, float64
 	x2 := deriviate(func(t float64) float64 { return deriviate(xFunc, t, h) }, t, h)
 	y2 := deriviate(func(t float64) float64 { return deriviate(yFunc, t, h) }, t, h)
 
-	// Вычисление знаменателя (избегаем деления на ноль)
 	denominator := x1*y2 - y1*x2
 	if math.Abs(denominator) < 1e-9 {
 		return math.NaN(), math.NaN()

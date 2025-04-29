@@ -1,68 +1,51 @@
 package main
 
-//import "gonum.org/v1/gonum/mat"
-
 import (
-	"fmt"
-	"gogeom/mathobjects"
-	"gogeom/matrixes"
+	hw5_n1 "gogeom/hw/hw5/n1"
+	hw5_n2 "gogeom/hw/hw5/n2"
 )
 
+//import "gonum.org/v1/gonum/mat"
+
 func main() {
+	// hw1_n1.Hw1_n1_a()
+	// hw1_n1.Hw1_n1_b_move()
+	// hw1_n1.Hw1_n1_b_rotate()
+	// hw1_n1.Hw1_n1_b_symmetry()
+	// hw1_n1.Hw1_n1_b_homotetia()
+	// hw1_n1.Hw1_n1_b_homotetia2()
+	// hw1_n1.Hw1_n1_с_composition1()
+	// hw1_n1.Hw1_n1_с_composition2()
 
-	const width, height = 1000, 1000 // Размер изображения
-	dc := matrixes.NewDrawingContext(width, height)
+	// hw1_n2.Hw1_n2_a()
+	// hw1_n2.Hw1_n2_b()
+	// hw1_n2.Hw1_n2_c()
+	// hw1_n2.Hw1_n2_d()
+	// hw1_n2.Hw1_n2_e()
 
-	lines := [][4]float64{
-		{1, 1, 2, 5},
-		{2, 7, 5, -1},
-		{3, 4, 0, 5},
-		{3, 1, 2, 6},
-		{4, 8, 5, 0}}
+	// hw2_n1.Hw2_n1_a()
+	// hw2_n1.Hw2_n1_b()
+	// hw2_n1.Hw2_n1_c()
+	// hw2_n1.Hw2_n1_d()
+	// hw2_n1.Hw2_n1_e()
+	// hw2_n2.Hw2_n2_a_b_c()
 
-	for _, v := range lines {
+	// hw3_n1.Hw3_n1_a_b()
+	// hw3_n2.Hw3_n2_a()
+	// hw3_n2.Hw3_n2_b()
+	// hw3_n2.Hw3_n2_с()
 
-		dc.DrawLine(v[0]*50, v[1]*50, v[2]*50, v[3]*50)
-		dc.Stroke()
-	}
+	// hw4_n1.Hw4_n1_a()
+	// hw4_n1.Hw4_n1_b()
+	// hw4_n1.Hw4_n1_с()
+	// hw4_n2.Hw4_n2_a()
+	// hw4_n2.Hw4_n2_b()
 
-	for i, _ := range lines {
-		for j := 0; j < i; j++ {
-			ans1 := mathobjects.IsIntersectSimple(
-				lines[i][0],
-				lines[i][1],
-				lines[i][2],
-				lines[i][3],
-				lines[j][0],
-				lines[j][1],
-				lines[j][2],
-				lines[j][3])
+	hw5_n1.Hw5_n1_a_b()
+	hw5_n2.Hw5_n2_a_b()
 
-			ans2 := mathobjects.IsIntersectWithPlacement(
-				lines[i][0],
-				lines[i][1],
-				lines[i][2],
-				lines[i][3],
-				lines[j][0],
-				lines[j][1],
-				lines[j][2],
-				lines[j][3])
+	// hw6_n1.Hw6_n1_a()
+	// hw6_n2.Hw6_n1_b()
+	// hw6_n2.Hw6_n1_c()
 
-			fmt.Printf("Line 1: (%v, %v)-(%v, %v) Line 2: (%v, %v)-(%v, %v) == %v and %v \n ",
-				lines[i][0],
-				lines[i][1],
-				lines[i][2],
-				lines[i][3],
-				lines[j][0],
-				lines[j][1],
-				lines[j][2],
-				lines[j][3],
-				ans1,
-				ans2)
-		}
-	}
-
-	//println(mathobjects.IsIntersectSimple(1, 1, 2, 5, 2, 7, 5, -1))
-
-	dc.SavePNG("coordinate_plane.png")
 }
